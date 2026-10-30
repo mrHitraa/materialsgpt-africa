@@ -1,7 +1,10 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { projectContext } from "@/lib/project-context";
+import { materialsQuery } from "@/lib/data/queries";
 
 export function ProjectContextPanel() {
-  const { salt, temperatureC, materials, objective } = projectContext;
+  const { salt, temperatureC, objective } = projectContext;
+  const { data: materials } = useSuspenseQuery(materialsQuery);
   return (
     <section className="rounded-lg border bg-card">
       <div className="border-b px-5 py-3">
@@ -37,16 +40,16 @@ export function ProjectContextPanel() {
                 <li key={m.id} className="flex items-start justify-between gap-2">
                   <div>
                     <div>{m.name}</div>
-                    {"note" in m && m.note && <div className="text-xs text-muted-foreground">{m.note}</div>}
+                    {m.description && <div className="text-xs text-muted-foreground">{m.description}</div>}
                   </div>
                   <span
                     className={
-                      m.status === "conditional"
+                      !m.active
                         ? "shrink-0 rounded bg-warning px-1.5 py-0.5 font-mono text-[10px] text-warning-foreground"
                         : "shrink-0 rounded bg-accent px-1.5 py-0.5 font-mono text-[10px] text-accent-foreground"
                     }
                   >
-                    {m.status}
+                    {m.active ? "candidate" : "conditional"}
                   </span>
                 </li>
               ))}
