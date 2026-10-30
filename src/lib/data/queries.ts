@@ -30,8 +30,9 @@ export const overviewCountsQuery = queryOptions({
   queryKey: ["overview_counts"],
   queryFn: async () => {
     const count = async (table: "literature_records" | "corrosion_observations" | "candidate_materials" | "benchmark_results", demo?: boolean) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let q = supabase.from(table).select("id", { count: "exact", head: true });
-      if (demo !== undefined && table !== "candidate_materials") q = q.eq("is_demo", demo);
+      if (demo !== undefined && table !== "candidate_materials") q = (q as any).eq("is_demo", demo);
       const { count, error } = await q;
       if (error) throw new Error(error.message);
       return count ?? 0;
