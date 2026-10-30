@@ -21,7 +21,7 @@ export const Route = createFileRoute("/literature")({
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(literatureQuery),
   pendingComponent: () => <LoadingState label="Loading literature…" />,
-  errorComponent: ({ error }) => <RetryError message={error.message} />,
+  errorComponent: ({ error }) => <RetryError message={error instanceof Error ? error.message : String(error)} />,
   notFoundComponent: () => <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />,
   component: Page,
 });
@@ -118,7 +118,14 @@ function AddLiteratureForm() {
         setErrors(fieldErrors(parsed.error));
         throw new Error("Please fix the highlighted fields.");
       }
-      const { error } = await supabase.from("literature_records").insert(parsed.data);
+      const { error } = await supabase.from("literature_records").insert({
+        ...parsed.data,
+        journal: parsed.data.journal ?? null,
+        doi: parsed.data.doi ?? null,
+        source_url: parsed.data.source_url ?? null,
+        full_text_url: parsed.data.full_text_url ?? null,
+        source_database: parsed.data.source_database ?? null,
+      });
       if (error) throw new Error(friendlyDbError(error.message));
     },
     onSuccess: () => {

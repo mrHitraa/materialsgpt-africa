@@ -17,7 +17,7 @@ export const Route = createFileRoute("/materials")({
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(materialsQuery),
   pendingComponent: () => <LoadingState label="Loading materials…" />,
-  errorComponent: ({ error }) => <RetryError message={error.message} />,
+  errorComponent: ({ error }) => <RetryError message={error instanceof Error ? error.message : String(error)} />,
   notFoundComponent: () => <EmptyState icon={FlaskConical} title="Not found" description="This page does not exist." />,
   component: Page,
 });

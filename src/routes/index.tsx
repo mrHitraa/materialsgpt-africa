@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
       context.queryClient.ensureQueryData(materialsQuery),
     ]),
   pendingComponent: () => <LoadingState label="Loading overview…" />,
-  errorComponent: ({ error }) => <RetryError message={error.message} />,
+  errorComponent: ({ error }) => <RetryError message={error instanceof Error ? error.message : String(error)} />,
   notFoundComponent: () => <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />,
   component: Overview,
 });
