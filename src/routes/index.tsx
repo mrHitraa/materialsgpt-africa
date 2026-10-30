@@ -1,24 +1,73 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { BookOpen, FlaskConical, LineChart, GitCompareArrows, Gauge, type LucideIcon } from "lucide-react";
+import { PageHeader } from "@/components/common/states";
+import { ProjectContextPanel } from "@/components/overview/ProjectContextPanel";
+import { projectContext } from "@/lib/project-context";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Overview · MaterialsGPT Africa" },
+      { name: "description", content: "Materials-discovery dashboard for CSP molten-salt storage in solar salt at ~565 °C." },
+      { property: "og:title", content: "Overview · MaterialsGPT Africa" },
+      { property: "og:description", content: "Materials-discovery dashboard for CSP molten-salt storage." },
+    ],
+  }),
+  component: Overview,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+type Stat = { label: string; value: string; hint: string; icon: LucideIcon };
+
+function Overview() {
+  const stats: Stat[] = [
+    { label: "Literature records", value: "0", hint: "No records collected yet", icon: BookOpen },
+    { label: "Candidate materials", value: String(projectContext.materials.length), hint: "Defined in project scope", icon: FlaskConical },
+    { label: "Predictions", value: "0", hint: "No predictions imported", icon: LineChart },
+    { label: "Validation mismatches", value: "—", hint: "Requires predictions and benchmarks", icon: GitCompareArrows },
+    { label: "Dataset confidence", value: "—", hint: "Not enough data to assess", icon: Gauge },
+  ];
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
+    <>
+      <PageHeader
+        title="Overview"
+        description="Status of the materials-discovery study for molten-salt thermal storage. Figures reflect only data entered into this workspace."
       />
-    </div>
+      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+        <div className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {stats.map((s) => (
+              <div key={s.label} className="rounded-lg border bg-card p-5">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span className="text-xs uppercase tracking-wide">{s.label}</span>
+                  <s.icon className="h-4 w-4" />
+                </div>
+                <div className="mt-3 font-mono text-3xl font-semibold">{s.value}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{s.hint}</div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border bg-card p-5">
+            <h2 className="text-sm font-semibold">Workflow</h2>
+            <ol className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                "Collect and structure corrosion research",
+                "Compare candidate alloys and coatings",
+                "Rank with transparent criteria",
+                "Import service-life predictions",
+                "Compare against published benchmarks",
+                "Generate a laboratory validation plan",
+              ].map((step, i) => (
+                <li key={step} className="flex gap-3 rounded-md border bg-muted/40 p-3">
+                  <span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-muted-foreground">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+        <ProjectContextPanel />
+      </div>
+    </>
   );
 }
