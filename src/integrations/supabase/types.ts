@@ -14,7 +14,209 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      benchmark_results: {
+        Row: {
+          created_at: string
+          id: string
+          is_demo: boolean
+          material_id: string
+          metric_name: string
+          metric_unit: string
+          metric_value: number
+          notes: string | null
+          salt_composition: string
+          source_observation_id: string
+          temperature_c: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          material_id: string
+          metric_name: string
+          metric_unit: string
+          metric_value: number
+          notes?: string | null
+          salt_composition: string
+          source_observation_id: string
+          temperature_c: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          material_id?: string
+          metric_name?: string
+          metric_unit?: string
+          metric_value?: number
+          notes?: string | null
+          salt_composition?: string
+          source_observation_id?: string
+          temperature_c?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benchmark_results_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "candidate_materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "benchmark_results_source_observation_id_fkey"
+            columns: ["source_observation_id"]
+            isOneToOne: false
+            referencedRelation: "corrosion_observations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      candidate_materials: {
+        Row: {
+          active: boolean
+          cost_tag: string | null
+          created_at: string
+          description: string | null
+          id: string
+          local_availability_tag: string | null
+          material_type: Database["public"]["Enums"]["material_type"]
+          name: string
+        }
+        Insert: {
+          active?: boolean
+          cost_tag?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          local_availability_tag?: string | null
+          material_type: Database["public"]["Enums"]["material_type"]
+          name: string
+        }
+        Update: {
+          active?: boolean
+          cost_tag?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          local_availability_tag?: string | null
+          material_type?: Database["public"]["Enums"]["material_type"]
+          name?: string
+        }
+        Relationships: []
+      }
+      corrosion_observations: {
+        Row: {
+          corrosion_rate: number | null
+          corrosion_rate_unit: string | null
+          created_at: string
+          exposure_time: number | null
+          exposure_time_unit: string | null
+          id: string
+          is_demo: boolean
+          literature_record_id: string
+          material_name: string
+          notes: string | null
+          salt_composition: string
+          temperature_c: number
+          test_method: string | null
+          thermal_cycling_details: string | null
+          verification_status: Database["public"]["Enums"]["verification_status"]
+        }
+        Insert: {
+          corrosion_rate?: number | null
+          corrosion_rate_unit?: string | null
+          created_at?: string
+          exposure_time?: number | null
+          exposure_time_unit?: string | null
+          id?: string
+          is_demo?: boolean
+          literature_record_id: string
+          material_name: string
+          notes?: string | null
+          salt_composition: string
+          temperature_c: number
+          test_method?: string | null
+          thermal_cycling_details?: string | null
+          verification_status?: Database["public"]["Enums"]["verification_status"]
+        }
+        Update: {
+          corrosion_rate?: number | null
+          corrosion_rate_unit?: string | null
+          created_at?: string
+          exposure_time?: number | null
+          exposure_time_unit?: string | null
+          id?: string
+          is_demo?: boolean
+          literature_record_id?: string
+          material_name?: string
+          notes?: string | null
+          salt_composition?: string
+          temperature_c?: number
+          test_method?: string | null
+          thermal_cycling_details?: string | null
+          verification_status?: Database["public"]["Enums"]["verification_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corrosion_observations_literature_record_id_fkey"
+            columns: ["literature_record_id"]
+            isOneToOne: false
+            referencedRelation: "literature_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      literature_records: {
+        Row: {
+          authors: string
+          created_at: string
+          doi: string | null
+          extraction_confidence: number | null
+          extraction_status: Database["public"]["Enums"]["extraction_status"]
+          full_text_url: string | null
+          id: string
+          is_demo: boolean
+          journal: string | null
+          publication_year: number
+          source_database: string | null
+          source_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          authors: string
+          created_at?: string
+          doi?: string | null
+          extraction_confidence?: number | null
+          extraction_status?: Database["public"]["Enums"]["extraction_status"]
+          full_text_url?: string | null
+          id?: string
+          is_demo?: boolean
+          journal?: string | null
+          publication_year: number
+          source_database?: string | null
+          source_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          authors?: string
+          created_at?: string
+          doi?: string | null
+          extraction_confidence?: number | null
+          extraction_status?: Database["public"]["Enums"]["extraction_status"]
+          full_text_url?: string | null
+          id?: string
+          is_demo?: boolean
+          journal?: string | null
+          publication_year?: number
+          source_database?: string | null
+          source_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +225,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      extraction_status:
+        | "pending"
+        | "in_progress"
+        | "extracted"
+        | "verified"
+        | "failed"
+      material_type: "alloy" | "coating"
+      verification_status: "unverified" | "verified" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +359,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      extraction_status: [
+        "pending",
+        "in_progress",
+        "extracted",
+        "verified",
+        "failed",
+      ],
+      material_type: ["alloy", "coating"],
+      verification_status: ["unverified", "verified", "rejected"],
+    },
   },
 } as const
