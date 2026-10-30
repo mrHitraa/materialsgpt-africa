@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LiteratureRouteImport } from './routes/literature'
+import { Route as MaterialsRouteImport } from './routes/materials'
+import { Route as PredictionsRouteImport } from './routes/predictions'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TestPlansRouteImport } from './routes/test-plans'
+import { Route as ValidationRouteImport } from './routes/validation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LiteratureRoute = LiteratureRouteImport.update({
+  id: '/literature',
+  path: '/literature',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaterialsRoute = MaterialsRouteImport.update({
+  id: '/materials',
+  path: '/materials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PredictionsRoute = PredictionsRouteImport.update({
+  id: '/predictions',
+  path: '/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestPlansRoute = TestPlansRouteImport.update({
+  id: '/test-plans',
+  path: '/test-plans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ValidationRoute = ValidationRouteImport.update({
+  id: '/validation',
+  path: '/validation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/literature': typeof LiteratureRoute
+  '/materials': typeof MaterialsRoute
+  '/predictions': typeof PredictionsRoute
+  '/settings': typeof SettingsRoute
+  '/test-plans': typeof TestPlansRoute
+  '/validation': typeof ValidationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/literature': typeof LiteratureRoute
+  '/materials': typeof MaterialsRoute
+  '/predictions': typeof PredictionsRoute
+  '/settings': typeof SettingsRoute
+  '/test-plans': typeof TestPlansRoute
+  '/validation': typeof ValidationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/literature': typeof LiteratureRoute
+  '/materials': typeof MaterialsRoute
+  '/predictions': typeof PredictionsRoute
+  '/settings': typeof SettingsRoute
+  '/test-plans': typeof TestPlansRoute
+  '/validation': typeof ValidationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/literature'
+    | '/materials'
+    | '/predictions'
+    | '/settings'
+    | '/test-plans'
+    | '/validation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/literature'
+    | '/materials'
+    | '/predictions'
+    | '/settings'
+    | '/test-plans'
+    | '/validation'
+  id:
+    | '__root__'
+    | '/'
+    | '/literature'
+    | '/materials'
+    | '/predictions'
+    | '/settings'
+    | '/test-plans'
+    | '/validation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LiteratureRoute: typeof LiteratureRoute
+  MaterialsRoute: typeof MaterialsRoute
+  PredictionsRoute: typeof PredictionsRoute
+  SettingsRoute: typeof SettingsRoute
+  TestPlansRoute: typeof TestPlansRoute
+  ValidationRoute: typeof ValidationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/literature': {
+      id: '/literature'
+      path: '/literature'
+      fullPath: '/literature'
+      preLoaderRoute: typeof LiteratureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/materials': {
+      id: '/materials'
+      path: '/materials'
+      fullPath: '/materials'
+      preLoaderRoute: typeof MaterialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/predictions': {
+      id: '/predictions'
+      path: '/predictions'
+      fullPath: '/predictions'
+      preLoaderRoute: typeof PredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-plans': {
+      id: '/test-plans'
+      path: '/test-plans'
+      fullPath: '/test-plans'
+      preLoaderRoute: typeof TestPlansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/validation': {
+      id: '/validation'
+      path: '/validation'
+      fullPath: '/validation'
+      preLoaderRoute: typeof ValidationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LiteratureRoute: LiteratureRoute,
+  MaterialsRoute: MaterialsRoute,
+  PredictionsRoute: PredictionsRoute,
+  SettingsRoute: SettingsRoute,
+  TestPlansRoute: TestPlansRoute,
+  ValidationRoute: ValidationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
