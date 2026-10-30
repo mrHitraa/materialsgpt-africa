@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { BookOpen, FlaskConical, LineChart, GitCompareArrows, Gauge, type LucideIcon } from "lucide-react";
-import { PageHeader } from "@/components/common/states";
+import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common/states";
+import { materialsQuery, overviewCountsQuery } from "@/lib/data/queries";
 import { ProjectContextPanel } from "@/components/overview/ProjectContextPanel";
-import { projectContext } from "@/lib/project-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,17 +12,34 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Materials-discovery dashboard for CSP molten-salt storage in solar salt at ~565 °C." },
       { property: "og:title", content: "Overview · MaterialsGPT Africa" },
       { property: "og:description", content: "Materials-discovery dashboard for CSP molten-salt storage." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(overviewCountsQuery),
+      context.queryClient.ensureQueryData(materialsQuery),
+    ]),
+  pendingComponent: () => <LoadingState label="Loading overview…" />,
+  errorComponent: ({ error }) => <RetryError message={error instanceof Error ? error.message : String(error)} />,
+  notFoundComponent: () => <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />,
   component: Overview,
 });
 
 type Stat = { label: string; value: string; hint: string; icon: LucideIcon };
 
+function RetryError({ message }: { message: string }) {
+  const router = useRouter();
+  return <ErrorState message={message} onRetry={() => router.invalidate()} />;
+}
+
 function Overview() {
+  const { data: c } = useSuspenseQuery(overviewCountsQuery);
   const stats: Stat[] = [
-    { label: "Literature records", value: "0", hint: "No records collected yet", icon: BookOpen },
-    { label: "Candidate materials", value: String(projectContext.materials.length), hint: "Defined in project scope", icon: FlaskConical },
+    { label: "Literature records", value: String(c.lit), hint: c.litDemo ? `${c.litDemo} of these are demo records` : "From the database", icon: BookOpen },
+    { label: "Corrosion observations", value: String(c.obs), hint: c.obsDemo ? `${c.obsDemo} of these are demo values` : "From the database", icon: FlaskConical },
+    { label: "Candidate materials", value: String(c.mats), hint: "From the database", icon: FlaskConical },
     { label: "Predictions", value: "0", hint: "No predictions imported", icon: LineChart },
     { label: "Validation mismatches", value: "—", hint: "Requires predictions and benchmarks", icon: GitCompareArrows },
     { label: "Dataset confidence", value: "—", hint: "Not enough data to assess", icon: Gauge },
