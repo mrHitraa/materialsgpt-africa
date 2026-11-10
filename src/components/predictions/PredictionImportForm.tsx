@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { pendingStorage } from "@/lib/data/pending-storage";
 import { friendlyDbError } from "@/lib/data/queries";
 import { fieldErrors, predictionInputSchema } from "@/lib/data/schemas";
 import { ErrorState } from "@/components/common/states";
@@ -39,7 +39,7 @@ export function PredictionImportForm() {
         throw new Error("Please fix the highlighted fields.");
       }
 
-      const { error } = await supabase.from("prediction_records").insert({
+      const { error } = await pendingStorage.from("prediction_records").insert({
         ...parsed.data,
         uncertainty: parsed.data.uncertainty ?? null,
       });

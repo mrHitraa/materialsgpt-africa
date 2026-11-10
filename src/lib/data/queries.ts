@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { pendingStorage } from "./pending-storage";
 
 export const materialsQuery = queryOptions({
   queryKey: ["candidate_materials"],
@@ -29,7 +30,7 @@ export const literatureQuery = queryOptions({
 export const predictionRecordsQuery = queryOptions({
   queryKey: ["prediction_records"],
   queryFn: async () => {
-    const { data, error } = await supabase
+    const { data, error } = await pendingStorage
       .from("prediction_records")
       .select("*")
       .order("created_at", { ascending: false });
@@ -41,7 +42,7 @@ export const predictionRecordsQuery = queryOptions({
 export const testPlanDraftsQuery = queryOptions({
   queryKey: ["test_plan_drafts"],
   queryFn: async () => {
-    const { data, error } = await supabase
+    const { data, error } = await pendingStorage
       .from("test_plan_drafts")
       .select("*")
       .order("created_at", { ascending: false });
@@ -77,8 +78,8 @@ export const overviewCountsQuery = queryOptions({
       ),
       count(supabase.from("candidate_materials").select("id", { count: "exact", head: true })),
       count(supabase.from("benchmark_results").select("id", { count: "exact", head: true })),
-      count(supabase.from("prediction_records").select("id", { count: "exact", head: true })),
-      count(supabase.from("test_plan_drafts").select("id", { count: "exact", head: true })),
+      count(pendingStorage.from("prediction_records").select("id", { count: "exact", head: true })),
+      count(pendingStorage.from("test_plan_drafts").select("id", { count: "exact", head: true })),
     ]);
     return { lit, litDemo, obs, obsDemo, mats, bench, predictions, testPlans };
   },

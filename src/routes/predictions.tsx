@@ -7,6 +7,7 @@ import { StageHandoff } from "@/components/pipeline/StageHandoff";
 import { PredictionImportForm } from "@/components/predictions/PredictionImportForm";
 import { DatabaseRateEstimator } from "@/components/predictions/DatabaseRateEstimator";
 import { literatureQuery, predictionRecordsQuery } from "@/lib/data/queries";
+import { conditionContext } from "@/lib/data/pending-storage";
 
 export const Route = createFileRoute("/predictions")({
   head: () => ({
@@ -46,6 +47,7 @@ function Page() {
   const rateEvidence = literature.flatMap((source) =>
     source.corrosion_observations.map((observation) => ({
       ...observation,
+      ...conditionContext(observation as typeof observation & Parameters<typeof conditionContext>[0]),
       source: {
         title: source.title,
         doi: source.doi,

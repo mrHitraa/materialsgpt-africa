@@ -16,3 +16,4 @@
 - Nav items live in `src/lib/navigation.ts`; shell in `src/components/layout/AppShell.tsx` wraps all routes from `__root.tsx`.
 - Shared empty/loading/error UI lives in `src/components/common/states.tsx`; every page must use it instead of ad-hoc states.
 - Never display scientific values that are not backed by a stored source reference.
+- Pending migration contracts live separately from generated live-database types; missing storage remains a database error and absent comparison conditions stay null, so preview compilation never implies schema deployment.

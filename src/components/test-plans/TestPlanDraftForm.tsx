@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { ErrorState } from "@/components/common/states";
-import { supabase } from "@/integrations/supabase/client";
+import { pendingStorage } from "@/lib/data/pending-storage";
 import { friendlyDbError, materialsQuery } from "@/lib/data/queries";
 import { fieldErrors } from "@/lib/data/schemas";
 import { testPlanDraftSchema } from "@/lib/data/test-plan-schemas";
@@ -123,7 +123,7 @@ export function TestPlanDraftForm() {
         throw new Error("Please fix the highlighted fields.");
       }
 
-      const { error } = await supabase.from("test_plan_drafts").insert({
+      const { error } = await pendingStorage.from("test_plan_drafts").insert({
         ...parsed.data,
         status: "draft",
         is_demo: false,
