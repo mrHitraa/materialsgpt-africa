@@ -217,6 +217,63 @@ export type Database = {
         }
         Relationships: []
       }
+      prediction_records: {
+        Row: {
+          assumptions: string
+          created_at: string
+          failure_criterion: string
+          id: string
+          is_demo: boolean
+          material_name: string
+          metric_name: string
+          metric_unit: string
+          model_input_summary: string
+          model_name: string
+          model_reference_url: string
+          model_version: string
+          predicted_value: number
+          salt_composition: string
+          temperature_c: number
+          uncertainty: string | null
+        }
+        Insert: {
+          assumptions: string
+          created_at?: string
+          failure_criterion: string
+          id?: string
+          is_demo?: boolean
+          material_name: string
+          metric_name: string
+          metric_unit: string
+          model_input_summary: string
+          model_name: string
+          model_reference_url: string
+          model_version: string
+          predicted_value: number
+          salt_composition: string
+          temperature_c: number
+          uncertainty?: string | null
+        }
+        Update: {
+          assumptions?: string
+          created_at?: string
+          failure_criterion?: string
+          id?: string
+          is_demo?: boolean
+          material_name?: string
+          metric_name?: string
+          metric_unit?: string
+          model_input_summary?: string
+          model_name?: string
+          model_reference_url?: string
+          model_version?: string
+          predicted_value?: number
+          salt_composition?: string
+          temperature_c?: number
+          uncertainty?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
