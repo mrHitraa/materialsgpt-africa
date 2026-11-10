@@ -1,0 +1,3 @@
+- [ ] Apply the three missing repository migrations in order, preserving all data.
+- [ ] Verify live columns, constraints, policies, privileges, and synchronized types.
+- [ ] Verify public pages without inserting test rows; retain unapproved draft safeguards.

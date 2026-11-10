@@ -106,6 +106,7 @@ export type Database = {
       }
       corrosion_observations: {
         Row: {
+          atmosphere: string | null
           corrosion_rate: number | null
           corrosion_rate_unit: string | null
           created_at: string
@@ -114,6 +115,8 @@ export type Database = {
           id: string
           is_demo: boolean
           literature_record_id: string
+          manufacturing_route: string | null
+          material_form: string | null
           material_name: string
           notes: string | null
           salt_composition: string
@@ -123,6 +126,7 @@ export type Database = {
           verification_status: Database["public"]["Enums"]["verification_status"]
         }
         Insert: {
+          atmosphere?: string | null
           corrosion_rate?: number | null
           corrosion_rate_unit?: string | null
           created_at?: string
@@ -131,6 +135,8 @@ export type Database = {
           id?: string
           is_demo?: boolean
           literature_record_id: string
+          manufacturing_route?: string | null
+          material_form?: string | null
           material_name: string
           notes?: string | null
           salt_composition: string
@@ -140,6 +146,7 @@ export type Database = {
           verification_status?: Database["public"]["Enums"]["verification_status"]
         }
         Update: {
+          atmosphere?: string | null
           corrosion_rate?: number | null
           corrosion_rate_unit?: string | null
           created_at?: string
@@ -148,6 +155,8 @@ export type Database = {
           id?: string
           is_demo?: boolean
           literature_record_id?: string
+          manufacturing_route?: string | null
+          material_form?: string | null
           material_name?: string
           notes?: string | null
           salt_composition?: string
@@ -212,6 +221,129 @@ export type Database = {
           publication_year?: number
           source_database?: string | null
           source_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prediction_records: {
+        Row: {
+          assumptions: string
+          created_at: string
+          failure_criterion: string
+          id: string
+          is_demo: boolean
+          material_name: string
+          metric_name: string
+          metric_unit: string
+          model_input_summary: string
+          model_name: string
+          model_reference_url: string
+          model_version: string
+          predicted_value: number
+          salt_composition: string
+          temperature_c: number
+          uncertainty: string | null
+        }
+        Insert: {
+          assumptions: string
+          created_at?: string
+          failure_criterion: string
+          id?: string
+          is_demo?: boolean
+          material_name: string
+          metric_name: string
+          metric_unit: string
+          model_input_summary: string
+          model_name: string
+          model_reference_url: string
+          model_version: string
+          predicted_value: number
+          salt_composition: string
+          temperature_c: number
+          uncertainty?: string | null
+        }
+        Update: {
+          assumptions?: string
+          created_at?: string
+          failure_criterion?: string
+          id?: string
+          is_demo?: boolean
+          material_name?: string
+          metric_name?: string
+          metric_unit?: string
+          model_input_summary?: string
+          model_name?: string
+          model_reference_url?: string
+          model_version?: string
+          predicted_value?: number
+          salt_composition?: string
+          temperature_c?: number
+          uncertainty?: string | null
+        }
+        Relationships: []
+      }
+      test_plan_drafts: {
+        Row: {
+          atmosphere: string
+          candidate_materials: string
+          characterization_methods: string
+          controls: string
+          coupon_specifications: string
+          created_at: string
+          exposure_duration: string
+          id: string
+          is_demo: boolean
+          lab_capabilities: string
+          open_questions: string
+          replicate_count: string
+          safety_review: string
+          salt_composition: string
+          status: string
+          target_temperature: string
+          test_mode: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          atmosphere: string
+          candidate_materials: string
+          characterization_methods: string
+          controls: string
+          coupon_specifications: string
+          created_at?: string
+          exposure_duration: string
+          id?: string
+          is_demo?: boolean
+          lab_capabilities: string
+          open_questions: string
+          replicate_count: string
+          safety_review: string
+          salt_composition: string
+          status?: string
+          target_temperature: string
+          test_mode: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          atmosphere?: string
+          candidate_materials?: string
+          characterization_methods?: string
+          controls?: string
+          coupon_specifications?: string
+          created_at?: string
+          exposure_duration?: string
+          id?: string
+          is_demo?: boolean
+          lab_capabilities?: string
+          open_questions?: string
+          replicate_count?: string
+          safety_review?: string
+          salt_composition?: string
+          status?: string
+          target_temperature?: string
+          test_mode?: string
           title?: string
           updated_at?: string
         }
