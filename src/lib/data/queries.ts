@@ -26,34 +26,71 @@ export const literatureQuery = queryOptions({
   },
 });
 
+export const predictionRecordsQuery = queryOptions({
+  queryKey: ["prediction_records"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("prediction_records")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data;
+  },
+});
+
+export const testPlanDraftsQuery = queryOptions({
+  queryKey: ["test_plan_drafts"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("test_plan_drafts")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data;
+  },
+});
+
 export const overviewCountsQuery = queryOptions({
   queryKey: ["overview_counts"],
   queryFn: async () => {
-    const count = async (table: "literature_records" | "corrosion_observations" | "candidate_materials" | "benchmark_results", demo?: boolean) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let q = supabase.from(table).select("id", { count: "exact", head: true });
-      if (demo !== undefined && table !== "candidate_materials") q = (q as any).eq("is_demo", demo);
-      const { count, error } = await q;
+    const count = async (
+      query: PromiseLike<{ count: number | null; error: { message: string } | null }>,
+    ) => {
+      const { count, error } = await query;
       if (error) throw new Error(error.message);
       return count ?? 0;
     };
-    const [lit, litDemo, obs, obsDemo, mats, bench] = await Promise.all([
-      count("literature_records"),
-      count("literature_records", true),
-      count("corrosion_observations"),
-      count("corrosion_observations", true),
-      count("candidate_materials"),
-      count("benchmark_results"),
+    const [lit, litDemo, obs, obsDemo, mats, bench, predictions, testPlans] = await Promise.all([
+      count(supabase.from("literature_records").select("id", { count: "exact", head: true })),
+      count(
+        supabase
+          .from("literature_records")
+          .select("id", { count: "exact", head: true })
+          .eq("is_demo", true),
+      ),
+      count(supabase.from("corrosion_observations").select("id", { count: "exact", head: true })),
+      count(
+        supabase
+          .from("corrosion_observations")
+          .select("id", { count: "exact", head: true })
+          .eq("is_demo", true),
+      ),
+      count(supabase.from("candidate_materials").select("id", { count: "exact", head: true })),
+      count(supabase.from("benchmark_results").select("id", { count: "exact", head: true })),
+      count(supabase.from("prediction_records").select("id", { count: "exact", head: true })),
+      count(supabase.from("test_plan_drafts").select("id", { count: "exact", head: true })),
     ]);
-    return { lit, litDemo, obs, obsDemo, mats, bench };
+    return { lit, litDemo, obs, obsDemo, mats, bench, predictions, testPlans };
   },
 });
 
 /** Turn database errors into readable messages. */
 export function friendlyDbError(message: string): string {
-  if (message.includes("duplicate key") && message.includes("doi")) return "A record with this DOI already exists.";
+  if (message.includes("duplicate key") && message.includes("doi"))
+    return "A record with this DOI already exists.";
   if (message.includes("literature_has_reference")) return "Provide a DOI or a source URL.";
-  if (message.includes("violates check constraint")) return "One of the values is outside the allowed range or format.";
+  if (message.includes("violates check constraint"))
+    return "One of the values is outside the allowed range or format.";
   if (message.includes("row-level security")) return "This record is not allowed to be saved.";
   return message;
 }

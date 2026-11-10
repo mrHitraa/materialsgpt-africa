@@ -1,4 +1,5 @@
 import { sourceCorpusSummary } from "@/lib/literature-corpus";
+import { getDesignEvidenceSummary } from "@/lib/design-evidence";
 
 export type PipelineStageId = "knowledge" | "design" | "predict" | "plan" | "validate";
 
@@ -7,6 +8,8 @@ export interface PipelineCounts {
   observations: number;
   materials: number;
   benchmarks: number;
+  predictions: number;
+  testPlans: number;
 }
 
 export interface PipelineStage {
@@ -44,8 +47,9 @@ export const pipelineStages: PipelineStage[] = [
     to: "/materials",
     owner: "Powell · criteria; Mohsen · coatings; Raldo · ranking engine",
     input: "Verified corrosion evidence and the agreed candidate list",
-    output: "Ranked candidates with explanations",
-    gate: "Use the three agreed dimensions; keep cost and local availability as tags, not scores.",
+    output:
+      "Confirmed research scope and condition-aware comparison framework; weighted ranking is deferred",
+    gate: "Framework complete for the approved IN625/P91/316L hot-side scope and separate A516 track. Confirm A516's component service temperature before including it in that roster. No aggregate ranking until criterion weights are approved.",
   },
   {
     id: "predict",
@@ -53,9 +57,9 @@ export const pipelineStages: PipelineStage[] = [
     title: "Predict",
     to: "/predictions",
     owner: "Mohsen",
-    input: "Ranked candidates and model assumptions",
-    output: "Versioned service-life estimates under thermal cycling",
-    gate: "Import model outputs with model version, inputs, and assumptions.",
+    input: "Confirmed candidate scope and outputs from an approved external model",
+    output: "Source-linked model outputs with version, conditions, endpoint, and assumptions",
+    gate: "Import externally generated outputs with model provenance, inputs, uncertainty, and failure criterion. This workspace does not execute a prediction model.",
   },
   {
     id: "plan",
@@ -63,9 +67,9 @@ export const pipelineStages: PipelineStage[] = [
     title: "Plan",
     to: "/test-plans",
     owner: "Powell",
-    input: "Shortlisted candidates and practical lab constraints",
-    output: "Readable and machine-readable test protocol",
-    gate: "Agree coupon, exposure, and characterization constraints for the lab.",
+    input: "Confirmed research scope and laboratory-approved constraints",
+    output: "Readable draft plan with unresolved inputs identified",
+    gate: "Resolve TBD fields and complete laboratory and safety review. A saved draft is not approval to begin experiments.",
   },
   {
     id: "validate",
@@ -86,9 +90,10 @@ export function getPipelineStageStatus(
   switch (stageId) {
     case "knowledge": {
       const retained = sourceCorpusSummary.core + sourceCorpusSummary.context;
+      const evidenceSummary = getDesignEvidenceSummary();
       return {
         label: `${retained} retained · ${sourceCorpusSummary.excluded} excluded`,
-        detail: `${sourceCorpusSummary.uniqueStudies} studies screened from ${sourceCorpusSummary.pdfFiles} local PDFs at title/abstract level. The workspace has ${counts.literature} non-demo source records and ${counts.observations} non-demo observations; full-text extraction and verification remain.`,
+        detail: `${sourceCorpusSummary.uniqueStudies} studies screened from ${sourceCorpusSummary.pdfFiles} local PDFs. The evidence set contains ${evidenceSummary.verifiedRecordCount} verified numeric records; numeric verifications pending: ${evidenceSummary.awaitingVerificationCount}, drawn from ${evidenceSummary.studyCount} papers. Qualitative findings source-checked: ${evidenceSummary.verifiedQualitativeFindingCount}; pending: ${evidenceSummary.awaitingQualitativeVerificationCount}; source conflicts: ${evidenceSummary.sourceConflictQualitativeFindingCount}. ${counts.literature} source records and ${counts.observations} observations are also stored in the workspace database.`,
         hasWorkspaceData: true,
       };
     }
@@ -100,23 +105,39 @@ export function getPipelineStageStatus(
             hasWorkspaceData: false,
           }
         : {
-            label: `${counts.materials} candidate${counts.materials === 1 ? "" : "s"} listed`,
+            label: `Stage 02 design framework complete · ${counts.materials} candidate${counts.materials === 1 ? "" : "s"} listed`,
             detail:
-              "The source set supports 316L, IN625, P91, and A516 signals. 321H, 347H, and an IN625 coating also surfaced for team review; no ranking has been computed.",
+              "The confirmed research scope compares IN625/P91/316L for the hot-side question and keeps A516 in a separate track pending component-temperature confirmation. Criteria and condition-matching rules are defined; weights and scoring are deferred, so no ranking is computed. Evidence gaps remain visible.",
             hasWorkspaceData: true,
           };
     case "predict":
-      return {
-        label: "Awaiting model output",
-        detail: "Prediction import is not available in this workspace yet.",
-        hasWorkspaceData: false,
-      };
+      return counts.predictions === 0
+        ? {
+            label: "Awaiting eligible evidence or imported model outputs",
+            detail:
+              "The exact-condition database rate estimator is available but needs fully characterized, verified observations. External model outputs can also be imported; this workspace does not execute models or estimate service life.",
+            hasWorkspaceData: false,
+          }
+        : {
+            label: `${counts.predictions} model output${counts.predictions === 1 ? "" : "s"} imported`,
+            detail:
+              "Imported outputs are recorded with their model provenance and remain unvalidated until compared with independent benchmark data.",
+            hasWorkspaceData: true,
+          };
     case "plan":
-      return {
-        label: "Awaiting plan inputs",
-        detail: "A ranked shortlist and agreed laboratory constraints are required.",
-        hasWorkspaceData: false,
-      };
+      return counts.testPlans === 0
+        ? {
+            label: "No test plan drafts",
+            detail:
+              "Create a draft from the confirmed research scope. Keep unprovided lab constraints as TBD; do not treat a draft as an approved protocol.",
+            hasWorkspaceData: false,
+          }
+        : {
+            label: `${counts.testPlans} test plan draft${counts.testPlans === 1 ? "" : "s"}`,
+            detail:
+              "Draft plan records are stored; laboratory review and approval are still required before use.",
+            hasWorkspaceData: true,
+          };
     case "validate":
       return counts.benchmarks === 0
         ? {

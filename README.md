@@ -62,9 +62,17 @@ Build Phase 1 only: the application foundation and project shell.
 
 The Overview maps the five research stages and their owner, input, output, and gate. The supplied literature folder is screened into core nitrate/solar-salt evidence, contextual sources, and out-of-scope studies; duplicates are consolidated. This is a title/abstract-level screen, not full-text extraction or scientific verification. The PDFs stay in the local Downloads folder and are not copied into or uploaded by the app.
 
-The Materials page reflects evidence signals for 316L, IN625, P91, and A516, while surfacing 321H, 347H, and an IN625 coating as leads for team review. These are not rankings or a finalized candidate roster. The ranking criteria are corrosion rate, thermal-fatigue resistance, and evidence confidence; cost and local availability remain descriptive tags. No weights or measured results are invented. The Knowledge stage calls for source locations and comparable test conditions to be recorded during full-text extraction.
+**Phase 02 — Design framework complete.** The team confirmed IN625, P91, and 316L as the hot-side research scope and A516 as a separate track pending confirmation of its component service temperature. The comparison framework defines corrosion rate, thermal-fatigue resistance, and evidence confidence; it preserves original metrics and units and compares only compatible conditions. Cost and local availability remain descriptive tags. Criterion weights are deferred, so the app does not score or rank materials. 321H, 347H, stainless steel 430, and an IN625 coating remain leads for team review, not approved candidates.
 
-Prediction import, ranking, protocol generation, and validation remain future implementation work until the team supplies the required model, approved scoring rules, and lab constraints.
+Evidence gaps remain visible, including the pending Gomes rate interval and Sandoval-Amador's unresolved salt-formulation conflict.
+
+**Phase 03 — Database rate estimator and model-output import started.** The Predictions page calculates an on-demand corrosion-rate evidence estimate from verified, non-demo database observations with complete conditions. It requires exact matches for material, salt, temperature, exposure, material form, manufacturing route, atmosphere, test method, cycling details, and rate unit. It first takes a median within each paper, then the median across independent papers. The displayed study range is an evidence spread, not a confidence interval. It does not extrapolate to new conditions or estimate service life. External model outputs can also be imported with their model/version/source, conditions, endpoint, assumptions, and uncertainty.
+
+Apply the migrations in `supabase/migrations` before using prediction storage or the added condition fields. The local extracted-evidence catalogue is not automatically inserted into Supabase. The estimator will show no result until the database contains fully characterized, source-linked, verified non-demo observations. Service-life estimates still require a supplied model and independently validated data. Full protocol approval and validation remain later work.
+
+**Stage 04 — Test plan draft.** The Test Plans page can save a draft using the confirmed research scope. Salt composition and project target temperature come from the project context; candidate names come from configured database materials. Laboratory capabilities, coupon preparation, exposure mode and schedule, atmosphere, duration, replicates, controls, characterization, and safety review remain explicitly TBD until supplied by the lab. A saved draft is not an approved protocol or authorization to begin experiments. Apply `20261110180000_create_test_plan_drafts.sql` before using draft storage.
+
+## Original Phase 1 foundation brief
 
 Create a clean responsive web application called MaterialsGPT Africa.
 

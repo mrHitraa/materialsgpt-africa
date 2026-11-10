@@ -29,8 +29,11 @@ export function SourceCorpusPanel() {
               Supplied literature set
             </h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              Screened from PDF titles, abstracts, and citation metadata; full-text extraction and
-              scientific verification are still pending.
+              The full source set was screened by title, abstract, and citation metadata. Full-text
+              extraction and verification audit documentation are still in progress. The original 22
+              extracted records are marked verified based on team confirmation. New 316L
+              verification statuses and limitations are summarized in the measurements section
+              below.
             </p>
           </div>
           <div className="flex flex-wrap gap-2 font-mono text-[10px]">
@@ -71,8 +74,8 @@ export function SourceCorpusPanel() {
             ))}
           </ul>
           <p className="mt-2 text-[11px] text-muted-foreground">
-            These are extraction requirements, not values already captured or verified in the
-            database.
+            These are the fields used for extraction. Original verified records and newer 316L
+            results with pending verification are shown in the measurements section below.
           </p>
         </details>
       </div>

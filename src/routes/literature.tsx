@@ -9,6 +9,7 @@ import { friendlyDbError, literatureQuery } from "@/lib/data/queries";
 import { fieldErrors, literatureInputSchema } from "@/lib/data/schemas";
 import { StageHandoff } from "@/components/pipeline/StageHandoff";
 import { SourceCorpusPanel } from "@/components/literature/SourceCorpusPanel";
+import { ExtractedEvidencePanel } from "@/components/literature/ExtractedEvidencePanel";
 
 export const Route = createFileRoute("/literature")({
   head: () => ({
@@ -53,6 +54,7 @@ function Page() {
       />
       <StageHandoff stageId="knowledge" />
       <SourceCorpusPanel />
+      <ExtractedEvidencePanel />
       <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
         <div className="space-y-4">
           {records.length === 0 ? (

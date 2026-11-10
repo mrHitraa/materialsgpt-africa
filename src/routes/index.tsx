@@ -60,6 +60,8 @@ function Overview() {
     observations: c.obs - c.obsDemo,
     materials: c.mats,
     benchmarks: c.bench,
+    predictions: c.predictions,
+    testPlans: c.testPlans,
   };
   const stats: Stat[] = [
     {
@@ -80,7 +82,12 @@ function Overview() {
       hint: "From the database",
       icon: FlaskConical,
     },
-    { label: "Predictions", value: "0", hint: "No predictions imported", icon: LineChart },
+    {
+      label: "Predictions",
+      value: String(c.predictions),
+      hint: "Imported model outputs",
+      icon: LineChart,
+    },
     {
       label: "Validation mismatches",
       value: "—",
