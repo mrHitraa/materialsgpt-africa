@@ -15,6 +15,13 @@
       "when": 1794322097292,
       "tag": "0001_create_prediction_records",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794322106905,
+      "tag": "0002_add_condition_context_to_corrosion_observations",
+      "breakpoints": true
     }
   ]
 }

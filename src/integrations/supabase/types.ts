@@ -106,6 +106,7 @@ export type Database = {
       }
       corrosion_observations: {
         Row: {
+          atmosphere: string | null
           corrosion_rate: number | null
           corrosion_rate_unit: string | null
           created_at: string
@@ -114,6 +115,8 @@ export type Database = {
           id: string
           is_demo: boolean
           literature_record_id: string
+          manufacturing_route: string | null
+          material_form: string | null
           material_name: string
           notes: string | null
           salt_composition: string
@@ -123,6 +126,7 @@ export type Database = {
           verification_status: Database["public"]["Enums"]["verification_status"]
         }
         Insert: {
+          atmosphere?: string | null
           corrosion_rate?: number | null
           corrosion_rate_unit?: string | null
           created_at?: string
@@ -131,6 +135,8 @@ export type Database = {
           id?: string
           is_demo?: boolean
           literature_record_id: string
+          manufacturing_route?: string | null
+          material_form?: string | null
           material_name: string
           notes?: string | null
           salt_composition: string
@@ -140,6 +146,7 @@ export type Database = {
           verification_status?: Database["public"]["Enums"]["verification_status"]
         }
         Update: {
+          atmosphere?: string | null
           corrosion_rate?: number | null
           corrosion_rate_unit?: string | null
           created_at?: string
@@ -148,6 +155,8 @@ export type Database = {
           id?: string
           is_demo?: boolean
           literature_record_id?: string
+          manufacturing_route?: string | null
+          material_form?: string | null
           material_name?: string
           notes?: string | null
           salt_composition?: string
