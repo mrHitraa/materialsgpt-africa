@@ -58,8 +58,13 @@ Important development rules:
 
 - Use a clean, professional scientific dashboard design.
 
-
 Build Phase 1 only: the application foundation and project shell.
+
+The Overview maps the five research stages and their owner, input, output, and gate. The supplied literature folder is screened into core nitrate/solar-salt evidence, contextual sources, and out-of-scope studies; duplicates are consolidated. This is a title/abstract-level screen, not full-text extraction or scientific verification. The PDFs stay in the local Downloads folder and are not copied into or uploaded by the app.
+
+The Materials page reflects evidence signals for 316L, IN625, P91, and A516, while surfacing 321H, 347H, and an IN625 coating as leads for team review. These are not rankings or a finalized candidate roster. The ranking criteria are corrosion rate, thermal-fatigue resistance, and evidence confidence; cost and local availability remain descriptive tags. No weights or measured results are invented. The Knowledge stage calls for source locations and comparable test conditions to be recorded during full-text extraction.
+
+Prediction import, ranking, protocol generation, and validation remain future implementation work until the team supplies the required model, approved scoring rules, and lab constraints.
 
 Create a clean responsive web application called MaterialsGPT Africa.
 

@@ -7,22 +7,34 @@ import { DemoBadge } from "@/components/common/DemoBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { friendlyDbError, literatureQuery } from "@/lib/data/queries";
 import { fieldErrors, literatureInputSchema } from "@/lib/data/schemas";
+import { StageHandoff } from "@/components/pipeline/StageHandoff";
+import { SourceCorpusPanel } from "@/components/literature/SourceCorpusPanel";
 
 export const Route = createFileRoute("/literature")({
   head: () => ({
     meta: [
       { title: "Literature · MaterialsGPT Africa" },
-      { name: "description", content: "Structured corrosion research records with preserved source references." },
+      {
+        name: "description",
+        content: "Structured corrosion research records with preserved source references.",
+      },
       { property: "og:title", content: "Literature · MaterialsGPT Africa" },
-      { property: "og:description", content: "Structured corrosion research records with preserved source references." },
+      {
+        property: "og:description",
+        content: "Structured corrosion research records with preserved source references.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(literatureQuery),
   pendingComponent: () => <LoadingState label="Loading literature…" />,
-  errorComponent: ({ error }) => <RetryError message={error instanceof Error ? error.message : String(error)} />,
-  notFoundComponent: () => <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />,
+  errorComponent: ({ error }) => (
+    <RetryError message={error instanceof Error ? error.message : String(error)} />
+  ),
+  notFoundComponent: () => (
+    <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />
+  ),
   component: Page,
 });
 
@@ -35,11 +47,20 @@ function Page() {
   const { data: records } = useSuspenseQuery(literatureQuery);
   return (
     <>
-      <PageHeader title="Literature" description="Structured corrosion research records with preserved source references. Records marked Demo are illustrative placeholders, not real publications." />
+      <PageHeader
+        title="Literature"
+        description="Structured corrosion research records with preserved source references. Records marked Demo are illustrative placeholders, not real publications."
+      />
+      <StageHandoff stageId="knowledge" />
+      <SourceCorpusPanel />
       <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
         <div className="space-y-4">
           {records.length === 0 ? (
-            <EmptyState icon={BookOpen} title="No literature records yet" description="Add a record with a DOI or source URL to start." />
+            <EmptyState
+              icon={BookOpen}
+              title="No literature records yet"
+              description="Add a record with a DOI or source URL to start."
+            />
           ) : (
             records.map((r) => (
               <article key={r.id} className="rounded-lg border bg-card p-5">
@@ -52,10 +73,30 @@ function Page() {
                   {r.journal ? ` · ${r.journal}` : ""}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-3 font-mono text-xs text-muted-foreground">
-                  {r.doi && <a className="text-primary hover:underline" href={`https://doi.org/${r.doi}`} target="_blank" rel="noreferrer">doi:{r.doi}</a>}
-                  {r.source_url && <a className="text-primary hover:underline" href={r.source_url} target="_blank" rel="noreferrer">source</a>}
+                  {r.doi && (
+                    <a
+                      className="text-primary hover:underline"
+                      href={`https://doi.org/${r.doi}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      doi:{r.doi}
+                    </a>
+                  )}
+                  {r.source_url && (
+                    <a
+                      className="text-primary hover:underline"
+                      href={r.source_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      source
+                    </a>
+                  )}
                   <span>status: {r.extraction_status}</span>
-                  {r.extraction_confidence != null && <span>confidence: {r.extraction_confidence}</span>}
+                  {r.extraction_confidence != null && (
+                    <span>confidence: {r.extraction_confidence}</span>
+                  )}
                 </div>
                 {r.corrosion_observations.length > 0 && (
                   <div className="mt-4 overflow-x-auto rounded-md border">
@@ -73,11 +114,21 @@ function Page() {
                       <tbody className="divide-y font-mono">
                         {r.corrosion_observations.map((o) => (
                           <tr key={o.id}>
-                            <td className="px-3 py-2 font-sans">{o.material_name} {o.is_demo && <DemoBadge />}</td>
+                            <td className="px-3 py-2 font-sans">
+                              {o.material_name} {o.is_demo && <DemoBadge />}
+                            </td>
                             <td className="px-3 py-2">{o.salt_composition}</td>
                             <td className="px-3 py-2">{o.temperature_c} °C</td>
-                            <td className="px-3 py-2">{o.exposure_time != null ? `${o.exposure_time} ${o.exposure_time_unit}` : "—"}</td>
-                            <td className="px-3 py-2">{o.corrosion_rate != null ? `${o.corrosion_rate} ${o.corrosion_rate_unit}` : "—"}</td>
+                            <td className="px-3 py-2">
+                              {o.exposure_time != null
+                                ? `${o.exposure_time} ${o.exposure_time_unit}`
+                                : "—"}
+                            </td>
+                            <td className="px-3 py-2">
+                              {o.corrosion_rate != null
+                                ? `${o.corrosion_rate} ${o.corrosion_rate_unit}`
+                                : "—"}
+                            </td>
                             <td className="px-3 py-2">{o.verification_status}</td>
                           </tr>
                         ))}
@@ -160,8 +211,16 @@ function AddLiteratureForm() {
         </label>
       ))}
       {mutation.isError && <ErrorState message={mutation.error.message} />}
-      {success && <p className="text-xs text-primary" role="status">Record saved.</p>}
-      <button type="submit" disabled={mutation.isPending} className="w-full rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50">
+      {success && (
+        <p className="text-xs text-primary" role="status">
+          Record saved.
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={mutation.isPending}
+        className="w-full rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
+      >
         {mutation.isPending ? "Saving…" : "Save record"}
       </button>
     </form>

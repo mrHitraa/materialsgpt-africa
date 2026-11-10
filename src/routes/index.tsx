@@ -1,17 +1,32 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { BookOpen, FlaskConical, LineChart, GitCompareArrows, Gauge, type LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  FlaskConical,
+  LineChart,
+  GitCompareArrows,
+  Gauge,
+  type LucideIcon,
+} from "lucide-react";
 import { EmptyState, ErrorState, LoadingState, PageHeader } from "@/components/common/states";
 import { materialsQuery, overviewCountsQuery } from "@/lib/data/queries";
 import { ProjectContextPanel } from "@/components/overview/ProjectContextPanel";
+import { DiscoveryPipeline } from "@/components/pipeline/DiscoveryPipeline";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Overview · MaterialsGPT Africa" },
-      { name: "description", content: "Materials-discovery dashboard for CSP molten-salt storage in solar salt at ~565 °C." },
+      {
+        name: "description",
+        content:
+          "Materials-discovery dashboard for CSP molten-salt storage in solar salt at ~565 °C.",
+      },
       { property: "og:title", content: "Overview · MaterialsGPT Africa" },
-      { property: "og:description", content: "Materials-discovery dashboard for CSP molten-salt storage." },
+      {
+        property: "og:description",
+        content: "Materials-discovery dashboard for CSP molten-salt storage.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -22,8 +37,12 @@ export const Route = createFileRoute("/")({
       context.queryClient.ensureQueryData(materialsQuery),
     ]),
   pendingComponent: () => <LoadingState label="Loading overview…" />,
-  errorComponent: ({ error }) => <RetryError message={error instanceof Error ? error.message : String(error)} />,
-  notFoundComponent: () => <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />,
+  errorComponent: ({ error }) => (
+    <RetryError message={error instanceof Error ? error.message : String(error)} />
+  ),
+  notFoundComponent: () => (
+    <EmptyState icon={BookOpen} title="Not found" description="This page does not exist." />
+  ),
   component: Overview,
 });
 
@@ -36,12 +55,38 @@ function RetryError({ message }: { message: string }) {
 
 function Overview() {
   const { data: c } = useSuspenseQuery(overviewCountsQuery);
+  const pipelineCounts = {
+    literature: c.lit - c.litDemo,
+    observations: c.obs - c.obsDemo,
+    materials: c.mats,
+    benchmarks: c.bench,
+  };
   const stats: Stat[] = [
-    { label: "Literature records", value: String(c.lit), hint: c.litDemo ? `${c.litDemo} of these are demo records` : "From the database", icon: BookOpen },
-    { label: "Corrosion observations", value: String(c.obs), hint: c.obsDemo ? `${c.obsDemo} of these are demo values` : "From the database", icon: FlaskConical },
-    { label: "Candidate materials", value: String(c.mats), hint: "From the database", icon: FlaskConical },
+    {
+      label: "Literature records",
+      value: String(c.lit),
+      hint: c.litDemo ? `${c.litDemo} of these are demo records` : "From the database",
+      icon: BookOpen,
+    },
+    {
+      label: "Corrosion observations",
+      value: String(c.obs),
+      hint: c.obsDemo ? `${c.obsDemo} of these are demo values` : "From the database",
+      icon: FlaskConical,
+    },
+    {
+      label: "Candidate materials",
+      value: String(c.mats),
+      hint: "From the database",
+      icon: FlaskConical,
+    },
     { label: "Predictions", value: "0", hint: "No predictions imported", icon: LineChart },
-    { label: "Validation mismatches", value: "—", hint: "Requires predictions and benchmarks", icon: GitCompareArrows },
+    {
+      label: "Validation mismatches",
+      value: "—",
+      hint: "Requires predictions and benchmarks",
+      icon: GitCompareArrows,
+    },
     { label: "Dataset confidence", value: "—", hint: "Not enough data to assess", icon: Gauge },
   ];
 
@@ -51,6 +96,7 @@ function Overview() {
         title="Overview"
         description="Status of the materials-discovery study for molten-salt thermal storage. Figures reflect only data entered into this workspace."
       />
+      <DiscoveryPipeline counts={pipelineCounts} />
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -77,7 +123,9 @@ function Overview() {
                 "Generate a laboratory validation plan",
               ].map((step, i) => (
                 <li key={step} className="flex gap-3 rounded-md border bg-muted/40 p-3">
-                  <span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-mono text-xs text-primary">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   <span className="text-muted-foreground">{step}</span>
                 </li>
               ))}
