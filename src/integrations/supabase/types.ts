@@ -283,6 +283,72 @@ export type Database = {
         }
         Relationships: []
       }
+      test_plan_drafts: {
+        Row: {
+          atmosphere: string
+          candidate_materials: string
+          characterization_methods: string
+          controls: string
+          coupon_specifications: string
+          created_at: string
+          exposure_duration: string
+          id: string
+          is_demo: boolean
+          lab_capabilities: string
+          open_questions: string
+          replicate_count: string
+          safety_review: string
+          salt_composition: string
+          status: string
+          target_temperature: string
+          test_mode: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          atmosphere: string
+          candidate_materials: string
+          characterization_methods: string
+          controls: string
+          coupon_specifications: string
+          created_at?: string
+          exposure_duration: string
+          id?: string
+          is_demo?: boolean
+          lab_capabilities: string
+          open_questions: string
+          replicate_count: string
+          safety_review: string
+          salt_composition: string
+          status?: string
+          target_temperature: string
+          test_mode: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          atmosphere?: string
+          candidate_materials?: string
+          characterization_methods?: string
+          controls?: string
+          coupon_specifications?: string
+          created_at?: string
+          exposure_duration?: string
+          id?: string
+          is_demo?: boolean
+          lab_capabilities?: string
+          open_questions?: string
+          replicate_count?: string
+          safety_review?: string
+          salt_composition?: string
+          status?: string
+          target_temperature?: string
+          test_mode?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
